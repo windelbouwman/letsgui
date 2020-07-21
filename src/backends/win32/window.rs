@@ -1,4 +1,4 @@
-use super::controls::Control;
+use super::controls::{Control, WinControl};
 use std::ptr::null_mut;
 use std::sync::{Arc, Mutex};
 use winapi::shared::minwindef::*;
@@ -38,12 +38,14 @@ pub fn init_window(h_instance: HMODULE) -> Win32Result {
     Ok(())
 }
 
+type ControlHandle = Box<dyn Control>;
+
 pub struct Window {
     title: String,
 
     hwnd: Mutex<Option<HWND>>,
 
-    children: Mutex<Vec<Box<dyn Control>>>,
+    children: Mutex<Vec<ControlHandle>>,
 }
 
 impl Window {
@@ -60,7 +62,8 @@ impl Window {
 
         let lp_param = Arc::into_raw(window.clone());
         let lp_param = lp_param as *mut winapi::ctypes::c_void;
-        println!("W00T: {:?}", lp_param);
+        // println!("W00T: {:?}", lp_param);
+
         let hwnd = unsafe {
             winuser::CreateWindowExW(
                 winuser::WS_EX_CLIENTEDGE,
@@ -87,10 +90,10 @@ impl Window {
         Ok(window)
     }
 
-    pub fn add_control(&self, control: Box<dyn Control>) {
+    pub fn add_control(&self, control: ControlHandle) {
         // control. self.hwnd()
         unsafe {
-            winuser::SetParent(control.get_hwnd(), self.hwnd());
+            winuser::SetParent(control.get_hwnd2(), self.hwnd());
         }
         self.children.lock().unwrap().push(control);
     }
@@ -106,7 +109,8 @@ impl Window {
         let children = &*self.children.lock().unwrap();
         if !children.is_empty() {
             let padding = 5;
-            let dy = size.height / children.len() as i32;
+            let all_height = (size.height - padding * 2).max(0);
+            let dy = all_height / children.len() as i32;
             let height = (dy - (padding * 2)).max(0);
             let width = (size.width - padding * 2).max(0);
             let mut y = 0;

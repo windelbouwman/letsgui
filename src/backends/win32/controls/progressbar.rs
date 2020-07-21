@@ -1,7 +1,7 @@
 use winapi::shared::windef::*;
 
 use super::super::{get_util_window, Win32Result};
-use super::{ensure_control, send_message, set_window_pos, Control, WinControl};
+use super::{ensure_control, send_message, WinControl};
 use winapi::um::commctrl;
 use winapi::um::winuser;
 
@@ -31,18 +31,6 @@ impl ProgressBar {
 }
 
 impl WinControl for ProgressBar {
-    fn get_hwnd(&self) -> HWND {
-        self.hwnd
-    }
-}
-
-impl Control for ProgressBar {
-    fn set_pos(&self, x: i32, y: i32, width: i32, height: i32) {
-        set_window_pos(self.hwnd, x, y, width, height).unwrap();
-    }
-
-    fn enable(&self) {}
-
     fn get_hwnd(&self) -> HWND {
         self.hwnd
     }

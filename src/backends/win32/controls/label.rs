@@ -1,8 +1,7 @@
 use winapi::shared::windef::*;
 
 use super::super::{get_util_window, Win32Result};
-use super::util::set_window_pos;
-use super::{ensure_control, Control, WinControl};
+use super::{ensure_control, WinControl};
 use winapi::um::winuser;
 
 pub struct Label {
@@ -22,17 +21,6 @@ impl Label {
         )?;
 
         Ok(Label { hwnd })
-    }
-}
-
-impl Control for Label {
-    fn set_pos(&self, x: i32, y: i32, width: i32, height: i32) {
-        set_window_pos(self.hwnd, x, y, width, height).unwrap();
-    }
-
-    fn enable(&self) {}
-    fn get_hwnd(&self) -> HWND {
-        self.hwnd
     }
 }
 

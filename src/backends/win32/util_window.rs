@@ -84,7 +84,7 @@ pub fn init_util_window(h_instance: HMODULE) -> Win32Result {
         h.replace(Some(hwnd));
     });
 
-    println!("Util window creat0rred");
+    // println!("Util window creat0rred");
 
     Ok(())
 }

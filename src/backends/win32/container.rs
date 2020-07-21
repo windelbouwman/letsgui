@@ -12,7 +12,7 @@ const CLASS_NAME: &str = "letsgui_container";
 
 /// Register container window class.
 pub fn init_container(h_instance: HMODULE) -> Win32Result {
-    println!("Initializing container");
+    info!("Initializing container");
     let class_name = win32_string(CLASS_NAME);
 
     unsafe {
@@ -60,10 +60,10 @@ unsafe extern "system" fn window_proc(
 ) -> LRESULT {
     match msg {
         winuser::WM_CREATE => {
-            println!("Container created!");
+            info!("Container created!");
         }
         winuser::WM_WINDOWPOSCHANGED => {
-            println!("Container pos changed!");
+            trace!("Container pos changed!");
         }
         _ => {}
     }
